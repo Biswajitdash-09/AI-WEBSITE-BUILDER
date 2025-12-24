@@ -10,6 +10,7 @@
     "inngest:dev": ".\\node_modules\\inngest-cli\\bin\\inngest.exe dev"
   },
   "dependencies": {
+    "@e2b/code-interpreter": "^1.5.1",
     "@hookform/resolvers": "^5.2.2",
     "@inngest/agent-kit": "^0.8.3",
     "@prisma/client": "^6.10.1",
