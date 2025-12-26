@@ -12,7 +12,7 @@
   "dependencies": {
     "@e2b/code-interpreter": "^1.5.1",
     "@hookform/resolvers": "^5.2.2",
-    "@inngest/agent-kit": "^0.8.3",
+    "@inngest/agent-kit": "^0.13.2",
     "@prisma/client": "^6.10.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -50,7 +50,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
-    "inngest": "^3.39.2",
+    "inngest": "^3.44.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.518.0",
     "next": "15.3.4",
@@ -66,7 +66,7 @@
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
-    "zod": "^3.25.67"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -76,7 +76,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
-    "inngest-cli": "^1.15.2",
+    "inngest-cli": "^1.8.0",
     "prisma": "^6.10.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
