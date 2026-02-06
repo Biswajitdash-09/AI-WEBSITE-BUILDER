@@ -16,7 +16,7 @@ export const messagesRouter = createTRPCRouter({
                projectId: Input.projectId,
             },
             orderBy: {
-                updatedAt: "desc",
+                updatedAt: "asc",
             },
             include: {
                 fragment: true,
@@ -29,7 +29,7 @@ export const messagesRouter = createTRPCRouter({
             z.object({
                 value: z.string()
                  .min(1, { message: "Value is required" })
-                .max(10000, { message: "Value is too long"}),
+                 .max(10000, { message: "Value is too long"}),
                 projectId: z.string().min(1, { message: "Project ID is required" }),
             }),
         )
