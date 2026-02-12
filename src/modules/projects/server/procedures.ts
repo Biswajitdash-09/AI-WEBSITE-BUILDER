@@ -7,29 +7,29 @@ import { TRPCError } from "@trpc/server";
 
 export const projectsRouter = createTRPCRouter({
     getOne: baseProcedure
-    .input(z.object({
-        id: z.string().min(1,{ message: "Id is required"}),
-    }))
-    .query(async ({ input }) => {
-        const projects = await prisma.project.findUnique({
-            where: {
-                id: input.id,
-            },
-           
-        });
+        .input(z.object({
+            id: z.string().min(1, { message: "Id is required" }),
+        }))
+        .query(async ({ input }) => {
+            const project = await prisma.project.findUnique({
+                where: {
+                    id: input.id,
+                },
 
-        if(!existingProject) {
-              throw new TRPCError({ code: "NOT_FOUND", message: "Project not found"});
-        }
+            });
 
-        return projects;
-    }),
+            if (!project) {
+                throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
+            }
+
+            return project;
+        }),
     create: baseProcedure
         .input(
             z.object({
                 value: z.string()
-                .min(1, { message: "Value is required" })
-                .max(10000, { message: "Value is too long"})
+                    .min(1, { message: "Value is required" })
+                    .max(10000, { message: "Value is too long" })
             }),
         )
         .mutation(async ({ input }) => {
@@ -38,14 +38,14 @@ export const projectsRouter = createTRPCRouter({
                     name: generateSlug(2, {
                         format: "kebab",
                     }),
-                   messages: {
-                    create: {
-                        content: input.value,
-                        role: "USER",
-                        type: "RESULT",
-                    }
+                    messages: {
+                        create: {
+                            content: input.value,
+                            role: "USER",
+                            type: "RESULT",
+                        }
 
-                   }
+                    }
                 }
             });
 
