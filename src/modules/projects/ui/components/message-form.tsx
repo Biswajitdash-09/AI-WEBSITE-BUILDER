@@ -1,29 +1,29 @@
 import { z } from "zod";
-import {toast} from "sonner";
-import {useState} from "react";
+import { toast } from "sonner";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextareaAutosize from "react-textarea-autosize";
-import{ArrowUpIcon, Loader2Icon} from "lucide-react";
-import { useMutation,  useQueryClient} from "@tanstack/react-query";
+import { ArrowUpIcon, Loader2Icon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import {cn} from "@/lib/utils";
-import {useTRPC } from "@/trpc/client";
+import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
-import {Form, FormField} from "@/components/ui/form";
-import { on } from "events";
+import { Form, FormField } from "@/components/ui/form";
 
-interface Props{
+
+interface Props {
     projectId: string;
 };
 
 const formSchema = z.object({
     value: z.string()
         .min(1, { message: "Value is required" })
-        .max(10000, { message: "Value is too long"}),
+        .max(10000, { message: "Value is too long" }),
 })
 
-export const MessageForm =({ projectId}: Props) =>{ 
+export const MessageForm = ({ projectId }: Props) => {
     const trpc = useTRPC();
     const QueryClient = useQueryClient();
     const form = useForm<z.infer<typeof formSchema>>({
@@ -32,45 +32,45 @@ export const MessageForm =({ projectId}: Props) =>{
             value: "",
         },
     });
-    
+
     const createMessage = useMutation(trpc.messages.create.mutationOptions({
         onSuccess: () => {
             form.reset();
             QueryClient.invalidateQueries(trpc.messages.getMany.queryOptions({ projectId }),
-         );
-           // TODO; Invalidate usage status
+            );
+            // TODO; Invalidate usage status
         },
         onError: (error) => {
             // TODO: Redirect to pricing page if specific error 
             toast.error(error.message);
         }
     }))
-    
-    const onSubmit = async (values: z.infer<typeof formSchema>) =>{
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         await createMessage.mutateAsync({
             value: values.value,
             projectId,
         });
     };
-    
+
     const [isFocused, setIsFocused] = useState(false);
     const isPending = createMessage.isPending;
     const isDisabled = isPending || !form.formState.isValid;
     const showUsage = false;
-   
+
     return (
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={cn(
-                    "relative border p-4 pt-1  rounded-xl bg-sidebar dark:bg-sidebar transition-all"
+                    "relative border p-4 pt-1  rounded-xl bg-sidebar dark:bg-sidebar transition-all",
                     isFocused && "shadow-xs",
                     showUsage && "rounded-t-none",
                 )}
             >
                 <FormField
                     control={form.control}
-                    name="content"
+                    name="value"
                     render={({ field }) => (
                         <TextareaAutosize
                             {...field}
@@ -81,14 +81,14 @@ export const MessageForm =({ projectId}: Props) =>{
                             maxRows={8}
                             className="pt-4 resize-none border-none w-full outline-none bg-transparent"
                             placeholder="What would you like to build?"
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)){
+                            onKeyDown={(e: React.KeyboardEvent) => {
+                                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                                     e.preventDefault();
                                     form.handleSubmit(onSubmit)(e);
                                 }
 
                             }}
-                         />
+                        />
                     )}
                 />
                 <div className="flex gap-x-2 items-end justify-between pt-2">
@@ -98,17 +98,17 @@ export const MessageForm =({ projectId}: Props) =>{
                         </kbd>
                         &nbsp;to submit
                     </div>
-                    <Button 
-                        disabled={isButtonDisabled}
+                    <Button
+                        disabled={isDisabled}
                         className={cn(
                             "size-8 rounded-full",
-                            isButtonDisabled && "bg-muted-foreground border"
-                        )}                 
+                            isDisabled && "bg-muted-foreground border"
+                        )}
                     >
                         {isPending ? (
                             <Loader2Icon className="size-4 animate-spin" />
                         ) : (
-                          <ArrowUpIcon/>
+                            <ArrowUpIcon />
                         )}
                     </Button>
                 </div>
