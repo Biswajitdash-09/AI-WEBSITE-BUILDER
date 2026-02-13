@@ -8,8 +8,12 @@ import {
 import { MessagesContainer } from "../components/messages-container";
 import { ProjectHeader } from "../components/project-header";
 import { FragmentWeb } from "../components/fragment-web";
+import { FragmentCode } from "../components/fragment-code";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma/client";
+import { Code2Icon, GlobeIcon, SparklesIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Props {
     projectId: string;
@@ -43,7 +47,36 @@ export const ProjectView = ({ projectId }: Props) => {
                     defaultSize={65}
                     minSize={50}
                 >
-                    {!!activeFragment && <FragmentWeb data={activeFragment} />}
+                    {!!activeFragment ? (
+                        <Tabs defaultValue="demo" className="h-full flex flex-col">
+                            <div className="flex items-center justify-between border-b px-4 h-12 shrink-0">
+                                <TabsList>
+                                    <TabsTrigger value="demo">
+                                        <GlobeIcon className="h-4 w-4 mr-1.5" />
+                                        Demo
+                                    </TabsTrigger>
+                                    <TabsTrigger value="code">
+                                        <Code2Icon className="h-4 w-4 mr-1.5" />
+                                        Code
+                                    </TabsTrigger>
+                                </TabsList>
+                                <Button variant="default" size="sm">
+                                    <SparklesIcon className="h-4 w-4 mr-1.5" />
+                                    Upgrade
+                                </Button>
+                            </div>
+                            <TabsContent value="demo" className="flex-1 m-0">
+                                <FragmentWeb data={activeFragment} />
+                            </TabsContent>
+                            <TabsContent value="code" className="flex-1 m-0">
+                                <FragmentCode data={activeFragment} />
+                            </TabsContent>
+                        </Tabs>
+                    ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">
+                            Select a fragment to preview
+                        </div>
+                    )}
                 </ResizablePanel>
             </ResizablePanelGroup>
 
