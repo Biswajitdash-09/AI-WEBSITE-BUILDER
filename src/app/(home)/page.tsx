@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Suspense } from "react";
+import { SignedIn } from "@clerk/nextjs";
 
 import { ProjectForm } from "./components/project-form";
 import { ProjectList } from "./components/project-list";
@@ -28,16 +29,18 @@ export default function HomePage() {
             {/* Project Form */}
             <ProjectForm />
 
-            {/* Saved Projects */}
-            <Suspense
-                fallback={
-                    <div className="text-sm text-muted-foreground">
-                        Loading projects...
-                    </div>
-                }
-            >
-                <ProjectList />
-            </Suspense>
+            {/* Saved Projects - only shown when signed in */}
+            <SignedIn>
+                <Suspense
+                    fallback={
+                        <div className="text-sm text-muted-foreground">
+                            Loading projects...
+                        </div>
+                    }
+                >
+                    <ProjectList />
+                </Suspense>
+            </SignedIn>
         </div>
     );
 }
