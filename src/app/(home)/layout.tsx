@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { UserControl } from "./components/user-control";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function HomeLayout({
     children,
@@ -19,7 +20,10 @@ export default function HomeLayout({
                     />
                     <span className="font-semibold text-lg">Vibe</span>
                 </Link>
-                <UserControl />
+                <div className="flex items-center gap-2">
+                    <ThemeToggle />
+                    <UserControl />
+                </div>
             </nav>
             {children}
         </div>

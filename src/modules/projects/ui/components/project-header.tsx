@@ -1,25 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useTheme } from "next-themes";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     ChevronLeftIcon,
     EditIcon,
-    SunMoonIcon,
 } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 
 import { useTRPC } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Props {
     projectId: string;
@@ -27,7 +20,6 @@ interface Props {
 
 export const ProjectHeader = ({ projectId }: Props) => {
     const trpc = useTRPC();
-    const { setTheme } = useTheme();
     const queryClient = useQueryClient();
 
     const [isEditing, setIsEditing] = useState(false);
@@ -40,11 +32,9 @@ export const ProjectHeader = ({ projectId }: Props) => {
 
     const updateProject = useMutation(trpc.projects.update.mutationOptions({
         onSuccess: () => {
-            // Invalidate getOne for this project
             queryClient.invalidateQueries({
                 queryKey: [['projects', 'getOne'], { input: { id: projectId }, type: 'query' }]
             });
-            // Invalidate getMany
             queryClient.invalidateQueries({
                 queryKey: [['projects', 'getMany']]
             });
@@ -124,24 +114,7 @@ export const ProjectHeader = ({ projectId }: Props) => {
             </div>
 
             <div className="flex items-center gap-2">
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <SunMoonIcon className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => setTheme("light")}>
-                            Light
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("dark")}>
-                            Dark
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("system")}>
-                            System
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <ThemeToggle />
             </div>
         </header>
     );
