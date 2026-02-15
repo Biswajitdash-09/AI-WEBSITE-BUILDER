@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useCallback, useEffect } from "react";
-import { CopyIcon, CheckIcon, SaveIcon, Loader2Icon } from "lucide-react";
+import { CopyIcon, CheckIcon, SaveIcon, Loader2Icon, DownloadIcon } from "lucide-react";
 
 import { Fragment } from "@/generated/prisma/client";
 import { convertFilesToTreeItems } from "@/lib/utils";
@@ -57,6 +57,38 @@ function extractSandboxId(sandboxUrl: string): string | null {
 
 export function FragmentCode({ data, onPreviewRefresh }: Props) {
     const [copied, setCopied] = useState(false);
+    const [isZipping, setIsZipping] = useState(false);
+
+    const handleDownloadZip = async () => {
+        setIsZipping(true);
+        try {
+            const JSZip = (await import("jszip")).default;
+            const zip = new JSZip();
+
+            // Add files to zip
+            Object.entries(files).forEach(([path, content]) => {
+                // Remove leading slash if present to make paths relative
+                const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+                zip.file(cleanPath, content);
+            });
+
+            const blob = await zip.generateAsync({ type: "blob" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `project-${data.id.slice(0, 8)}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            toast.success("Project exported as ZIP");
+        } catch (error) {
+            console.error("Failed to zip files:", error);
+            toast.error("Failed to export ZIP");
+        } finally {
+            setIsZipping(false);
+        }
+    };
 
     const files = useMemo(() => {
         if (!data.files || typeof data.files !== "object") return {};
@@ -175,6 +207,20 @@ export function FragmentCode({ data, onPreviewRefresh }: Props) {
                                 )}
                             </div>
                             <div className="flex items-center gap-1 pr-2 shrink-0">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={handleDownloadZip}
+                                    disabled={isZipping}
+                                    title="Export as Zip"
+                                >
+                                    {isZipping ? (
+                                        <Loader2Icon className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <DownloadIcon className="h-4 w-4" />
+                                    )}
+                                </Button>
                                 {sandboxId && (
                                     <Button
                                         variant={hasUnsavedChanges ? "default" : "ghost"}
