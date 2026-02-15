@@ -14,13 +14,14 @@ import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma/client";
 import { Code2Icon, GlobeIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useClerk } from "@clerk/nextjs";
 
 interface Props {
     projectId: string;
 };
 
 export const ProjectView = ({ projectId }: Props) => {
-
+    const { openUserProfile } = useClerk();
     const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
     return (
         <div className="h-screen">
@@ -60,7 +61,11 @@ export const ProjectView = ({ projectId }: Props) => {
                                         Code
                                     </TabsTrigger>
                                 </TabsList>
-                                <Button variant="default" size="sm">
+                                <Button
+                                    variant="default"
+                                    size="sm"
+                                    onClick={() => openUserProfile()}
+                                >
                                     <SparklesIcon className="h-4 w-4 mr-1.5" />
                                     Upgrade
                                 </Button>

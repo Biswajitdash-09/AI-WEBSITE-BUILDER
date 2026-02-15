@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { SendHorizonalIcon } from "lucide-react";
 
@@ -16,12 +17,16 @@ interface Props {
 
 export function ProjectForm({ onNavigate }: Props) {
     const router = useRouter();
+    const { openUserProfile } = useClerk();
     const [value, setValue] = useState("");
     const trpc = useTRPC();
 
     const createProject = useMutation(
         trpc.projects.create.mutationOptions({
             onError: (error) => {
+                if (error.data?.code === "TOO_MANY_REQUESTS") {
+                    openUserProfile();
+                }
                 toast.error(error.message);
             },
             onSuccess: (data) => {

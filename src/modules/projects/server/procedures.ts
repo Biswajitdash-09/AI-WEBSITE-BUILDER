@@ -1,5 +1,6 @@
 import { inngest } from "@/inngest/client";
 import { prisma } from "@/lib/db";
+import { consumeCredits } from "@/lib/credits";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { z } from "zod";
 import { generateSlug } from "random-word-slugs";
@@ -46,6 +47,9 @@ export const projectsRouter = createTRPCRouter({
             }),
         )
         .mutation(async ({ ctx, input }) => {
+            // Check and consume credits before creating the project
+            await consumeCredits(ctx.clerkUserId);
+
             const createdProject = await prisma.project.create({
                 data: {
                     userId: ctx.clerkUserId,
@@ -62,8 +66,6 @@ export const projectsRouter = createTRPCRouter({
                     }
                 }
             });
-
-
 
             await inngest.send({
                 name: "code-agent/run",

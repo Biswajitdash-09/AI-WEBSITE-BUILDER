@@ -1,5 +1,6 @@
 import { inngest } from "@/inngest/client";
 import { prisma } from "@/lib/db";
+import { consumeCredits } from "@/lib/credits";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { z } from "zod";
 
@@ -33,7 +34,10 @@ export const messagesRouter = createTRPCRouter({
                 projectId: z.string().min(1, { message: "Project ID is required" }),
             }),
         )
-        .mutation(async ({ input }) => {
+        .mutation(async ({ ctx, input }) => {
+            // Check and consume credits before creating the message
+            await consumeCredits(ctx.clerkUserId);
+
             const createdMessage = await prisma.message.create({
                 data: {
                     projectId: input.projectId,
