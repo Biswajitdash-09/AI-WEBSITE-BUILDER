@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vibe - AI Builder",
+  title: "SiteForge - AI Builder",
   description: "Create apps and websites by chatting with AI",
 };
 

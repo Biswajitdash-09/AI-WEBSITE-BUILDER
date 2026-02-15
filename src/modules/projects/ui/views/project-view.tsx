@@ -10,7 +10,7 @@ import { ProjectHeader } from "../components/project-header";
 import { FragmentWeb } from "../components/fragment-web";
 import { FragmentCode } from "../components/fragment-code";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Suspense, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { Fragment } from "@/generated/prisma/client";
 import { Code2Icon, GlobeIcon, SparklesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,15 @@ interface Props {
 export const ProjectView = ({ projectId }: Props) => {
     const { openUserProfile } = useClerk();
     const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
+    const [previewKey, setPreviewKey] = useState(0);
+
+    const handlePreviewRefresh = useCallback(() => {
+        // Small delay to let the sandbox hot-reload pick up the file change
+        setTimeout(() => {
+            setPreviewKey((prev) => prev + 1);
+        }, 1000);
+    }, []);
+
     return (
         <div className="h-screen">
             <ResizablePanelGroup orientation="horizontal">
@@ -71,10 +80,16 @@ export const ProjectView = ({ projectId }: Props) => {
                                 </Button>
                             </div>
                             <TabsContent value="demo" className="flex-1 m-0">
-                                <FragmentWeb data={activeFragment} />
+                                <FragmentWeb
+                                    key={previewKey}
+                                    data={activeFragment}
+                                />
                             </TabsContent>
-                            <TabsContent value="code" className="flex-1 m-0">
-                                <FragmentCode data={activeFragment} />
+                            <TabsContent value="code" className="flex-1 m-0 overflow-hidden min-h-0">
+                                <FragmentCode
+                                    data={activeFragment}
+                                    onPreviewRefresh={handlePreviewRefresh}
+                                />
                             </TabsContent>
                         </Tabs>
                     ) : (

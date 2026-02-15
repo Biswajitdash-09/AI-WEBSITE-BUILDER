@@ -14,11 +14,11 @@ export default function HomeLayout({
                 <Link href="/" className="flex items-center gap-2">
                     <Image
                         src="/logo.svg"
-                        alt="Vibe"
+                        alt="SiteForge"
                         width={28}
                         height={28}
                     />
-                    <span className="font-semibold text-lg">Vibe</span>
+                    <span className="font-semibold text-lg">SiteForge</span>
                 </Link>
                 <div className="flex items-center gap-2">
                     <ThemeToggle />

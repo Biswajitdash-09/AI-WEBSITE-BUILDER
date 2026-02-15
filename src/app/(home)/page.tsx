@@ -14,12 +14,12 @@ export default function HomePage() {
             <div className="flex flex-col items-center gap-4 text-center">
                 <Image
                     src="/logo.svg"
-                    alt="Vibe"
+                    alt="SiteForge"
                     width={48}
                     height={48}
                 />
                 <h1 className="text-4xl font-bold tracking-tight">
-                    Build something with Vibe
+                    Build something with SiteForge
                 </h1>
                 <p className="text-muted-foreground text-lg">
                     Create apps and websites by chatting with AI

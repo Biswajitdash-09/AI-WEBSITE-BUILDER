@@ -19,7 +19,7 @@ export function ProjectList() {
 
     return (
         <div className="w-full max-w-5xl mx-auto">
-            <h2 className="text-xl font-bold mb-4">Saved Vibes</h2>
+            <h2 className="text-xl font-bold mb-4">Saved Projects</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {projects.map((project) => (
                     <Link

@@ -7,7 +7,7 @@ const plans = [
         name: "Free",
         price: "$0",
         period: "forever",
-        description: "Perfect for trying out Vibe",
+        description: "Perfect for trying out SiteForge",
         credits: FREE_CREDITS,
         features: [
             { text: `${FREE_CREDITS} credits per month`, included: true },
@@ -56,8 +56,8 @@ export default function PricingPage() {
                     <div
                         key={plan.name}
                         className={`relative flex flex-col rounded-2xl border p-8 ${plan.highlighted
-                                ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
-                                : "border-border bg-card"
+                            ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
+                            : "border-border bg-card"
                             }`}
                     >
                         {plan.highlighted && (
