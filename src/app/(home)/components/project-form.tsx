@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { SendHorizonalIcon } from "lucide-react";
+import TextareaAutosize from "react-textarea-autosize";
 
 import { useTRPC } from "@/trpc/client";
 import { Button } from "@/components/ui/button";
@@ -56,24 +57,28 @@ export function ProjectForm({ onNavigate }: Props) {
     return (
         <div className="w-full max-w-3xl mx-auto flex flex-col gap-6">
             {/* Input */}
-            <div className="relative">
-                <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="What would you like to build?"
-                    disabled={createProject.isPending}
-                    className="w-full rounded-xl border bg-background px-4 py-3 pr-12 text-sm shadow-sm outline-none focus:ring-2 focus:ring-ring/50 transition-shadow disabled:opacity-50"
-                />
-                <Button
-                    size="icon"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg"
-                    disabled={createProject.isPending || !value.trim()}
-                    onClick={handleSubmit}
-                >
-                    <SendHorizonalIcon className="h-4 w-4" />
-                </Button>
+            {/* Input */}
+            <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-violet-500 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur-sm group-focus-within:opacity-100 group-focus-within:duration-200" />
+                <div className="relative bg-background rounded-2xl">
+                    <TextareaAutosize
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="What would you like to build today?"
+                        disabled={createProject.isPending}
+                        minRows={4}
+                        className="w-full rounded-2xl border-0 bg-background/50 px-6 py-5 pr-14 text-base shadow-xl outline-none ring-1 ring-border focus:ring-2 focus:ring-violet-500/20 transition-all disabled:opacity-50 resize-none placeholder:text-muted-foreground/60"
+                    />
+                    <Button
+                        size="icon"
+                        className="absolute right-3 bottom-3 h-10 w-10 rounded-xl bg-primary text-primary-foreground shadow-lg hover:shadow-primary/25 hover:scale-105 transition-all duration-200"
+                        disabled={createProject.isPending || !value.trim()}
+                        onClick={handleSubmit}
+                    >
+                        <SendHorizonalIcon className="h-5 w-5" />
+                    </Button>
+                </div>
             </div>
 
             {/* Hint */}
