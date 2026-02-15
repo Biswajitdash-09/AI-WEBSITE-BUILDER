@@ -22,7 +22,7 @@ export default function HomePage() {
                     Build something with SiteForge
                 </h1>
                 <p className="text-muted-foreground text-lg">
-                    Create apps and websites by chatting with AI
+                    Create websites by chatting with AI
                 </p>
             </div>
 
